@@ -89,9 +89,10 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     }
 
     deleteHandler(task: Task) {
-        const url = `api/tasks/destroy/${task.id}`
-        const token = document.querySelector('meta[name="csrf-token"]').textContent;
+        
         return () => {
+            const url = `/api/tasks/destroy/${task.id}`
+        const token = document.querySelector('meta[name="csrf-token"]').content;
             const filtered = this.state.tasks.filter((t) => t.id != task.id);
             this.setState({
                 tasks: filtered,
@@ -101,7 +102,7 @@ class TaskList extends React.Component<TaskProp, TaskState> {
             fetch(url, {
                 method: "DELETE",
                 headers: {
-                    "X-CRF-Token": token,
+                    "X-CSRF-Token": token,
                     "Content-Type": "application/json"
                 }
             })
@@ -119,12 +120,12 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     }
 
     createHandler(task: Task) {
-        const url = 'api/tasks/create'
+        const url = '/api/tasks/create'
         const token = document.querySelector('meta[name="csrf-token"]').textContent;
         fetch(url, {
             method: "POST",
             headers: {
-                "X-CRF-Token": token,
+                "X-CSRF-Token": token,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(task),
@@ -134,7 +135,7 @@ class TaskList extends React.Component<TaskProp, TaskState> {
 
 
     getTasks() {
-        const url = 'api/tasks/index'
+        const url = '/api/tasks/index'
         const response =  fetch(url)
             .then(response => {
                 if (response.ok) {
