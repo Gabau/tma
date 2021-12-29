@@ -1,4 +1,5 @@
 import { Button, Card, CardActions, CardContent, List, ListItem, Theme, Typography } from "@material-ui/core";
+import { FilterTiltShiftTwoTone } from "@material-ui/icons";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import * as React from "react";
 import { classicNameResolver } from "typescript";
@@ -17,11 +18,13 @@ const useStyle = makeStyles((theme: Theme) =>
 // represents a task
 type Task = {
     name: string;
+    description?: string;
     tags?: string[];
+    id?: number;
 }
 
 type TaskProp = {
-
+    onError: (msg: string) => void;
 }
 
 type TaskState = {
@@ -64,13 +67,16 @@ class TaskList extends React.Component<TaskProp, TaskState> {
             tasks: defaultList,
             toRender: defaultList.map((val) => this.generateTaskCard(val)),
         };
+        this.getTasks();
     }
 
     render() {
         return (
-            <List>
-                {this.state.toRender}
-            </List>
+            <React.Fragment>
+                <List>
+                    {this.state.toRender}
+                </List>
+            </React.Fragment>
         )
     }
 
@@ -83,17 +89,63 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     }
 
     deleteHandler(task: Task) {
+        const url = `api/tasks/destroy/${task.id}`
+        const token = document.querySelector('meta[name="csrf-token"]').textContent;
         return () => {
-            const filtered = this.state.tasks.filter((t) => t.name != task.name);
+            const filtered = this.state.tasks.filter((t) => t.id != task.id);
             this.setState({
                 tasks: filtered,
                 toRender: filtered.map((val) => this.generateTaskCard(val)),
             })
+            // perform the delete via api
+            fetch(url, {
+                method: "DELETE",
+                headers: {
+                    "X-CRF-Token": token,
+                    "Content-Type": "application/json"
+                }
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error("Network response was not ok");
+            })
+            .catch(error => {
+                this.props.onError(error.message);
+                this.getTasks();  // to refresh the list
+            });
         }
     }
 
-}
+    createHandler(task: Task) {
+        const url = 'api/tasks/create'
+        const token = document.querySelector('meta[name="csrf-token"]').textContent;
+        fetch(url, {
+            method: "POST",
+            headers: {
+                "X-CRF-Token": token,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(task),
+        }).catch(error => console.log(error.message));
+        this.getTasks();
+    } 
 
+
+    getTasks() {
+        const url = 'api/tasks/index'
+        const response =  fetch(url)
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error("Network response not okay");
+            }).then(response => this.setState({ tasks: response, toRender: response.map(val => this.generateTaskCard(val)) }))
+            .catch(error => this.props.onError(error.message));
+    }
+
+}
 
 
 export default TaskList;

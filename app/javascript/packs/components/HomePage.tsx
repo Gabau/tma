@@ -1,11 +1,15 @@
 import * as React from 'react';
 import TaskList from './TaskList';
 
+type Prop = {
+    onError: (msg: string) => void;
+}
 
-function HomePage(): JSX.Element {
+
+function HomePage(props: Prop): JSX.Element {
     return (
         <React.Fragment>
-            <TaskList></TaskList>
+            <TaskList onError={props.onError} ></TaskList>
         </React.Fragment>
     );
 }

@@ -2,11 +2,15 @@ import * as React from "react";
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import HomePage from "../packs/components/HomePage";
 
-export default () => (
+type RouterProps = {
+    onError: (msg: string) => void;
+}
+
+export default (props: RouterProps) => (
     <div>
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<HomePage />} />
+                <Route path="/" element={<HomePage onError={props.onError}/>} />
             </Routes>
         </BrowserRouter>
     </div>

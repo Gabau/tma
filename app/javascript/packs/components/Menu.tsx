@@ -31,7 +31,7 @@ export default function Menu(props: Prop) {
   return (
       <div>
           <Drawer anchor="left" open={props.isOpen} onClose={props.onClose}>
-              Something
+              Placeholder
           </Drawer>
       </div>
   )
