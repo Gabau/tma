@@ -56,3 +56,9 @@ to
 ```
 local   all             all                                md5
 ```
+
+run the following to restart psql.
+
+```
+sudo service postgresql restart
+```
