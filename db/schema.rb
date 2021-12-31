@@ -17,7 +17,7 @@ ActiveRecord::Schema.define(version: 2021_12_29_055244) do
 
   create_table "tasks", force: :cascade do |t|
     t.string "name", null: false
-    t.text "description", null: false
+    t.text "description", default: ""
     t.text "tags", default: [], array: true
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

@@ -3,7 +3,8 @@ import { FilterTiltShiftTwoTone } from "@material-ui/icons";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import * as React from "react";
 import { classicNameResolver } from "typescript";
-
+import TaskForm from "./forms/TaskForm";
+import Task from "./data/Task";
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -15,13 +16,7 @@ const useStyle = makeStyles((theme: Theme) =>
 );
 
 
-// represents a task
-type Task = {
-    name: string;
-    description?: string;
-    tags?: string[];
-    id?: number;
-}
+
 
 type TaskProp = {
     onError: (msg: string) => void;
@@ -52,13 +47,7 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     )
 }
 
-const defaultList: Task[] = [
-    { name: "Someone", tags: [] },
-    { name: "No one", tags: [] },
-    { name: "Some kind of task" },
-    { name: "Not really a task" },
-    { name: "Maybe a task" },
-];
+const defaultList: Task[] = [];
 
 class TaskList extends React.Component<TaskProp, TaskState> {
     constructor(props: TaskProp) {
@@ -73,6 +62,7 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     render() {
         return (
             <React.Fragment>
+                <TaskForm taskConsumer={this.createHandler.bind(this)}></TaskForm>
                 <List>
                     {this.state.toRender}
                 </List>
@@ -121,16 +111,23 @@ class TaskList extends React.Component<TaskProp, TaskState> {
 
     createHandler(task: Task) {
         const url = '/api/tasks/create'
-        const token = document.querySelector('meta[name="csrf-token"]').textContent;
+        const token = document.querySelector('meta[name="csrf-token"]').content;
+        const body: Task = {
+            name: task.name
+        }
         fetch(url, {
             method: "POST",
             headers: {
                 "X-CSRF-Token": token,
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(task),
-        }).catch(error => console.log(error.message));
-        this.getTasks();
+            body: JSON.stringify(body),
+        }).catch(error => this.props.onError(error.message));
+        const temp = this.state.tasks.slice();
+        temp.unshift(body);
+        this.setState({tasks: temp, toRender: temp.map(val => this.generateTaskCard(val))});
+        // to ensure that the database has been updated
+        setTimeout(() => this.getTasks(), 300);
     } 
 
 
