@@ -24,7 +24,7 @@ export default function TopBar(props: Prop) {
     const classes = useStyles();
     return (
         <div className={classes.root}>
-            <AppBar position="static">
+            <AppBar position="fixed">
                 <Toolbar>
                     <IconButton onClick={props.menuFunc} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />
@@ -32,9 +32,9 @@ export default function TopBar(props: Prop) {
                     <Typography variant="h6" className={classes.title}>
                         Tasks
                     </Typography>
-                    <Button color="inherit">Login</Button>
                 </Toolbar>
             </AppBar>
+            <Toolbar />
         </div>
     );
 

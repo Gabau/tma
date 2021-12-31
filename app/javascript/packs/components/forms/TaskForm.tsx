@@ -56,6 +56,7 @@ export default class TaskForm extends React.Component<TaskFormProp, TaskFormStat
                                     any additional information.
                                 </DialogContentText>
                                 <TextField
+                                    required={true}
                                     autoFocus={true}
                                     margin="dense"
                                     id="name"

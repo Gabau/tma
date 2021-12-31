@@ -5,11 +5,15 @@ import * as React from "react";
 import { classicNameResolver } from "typescript";
 import TaskForm from "./forms/TaskForm";
 import Task from "./data/Task";
+import { red } from "@material-ui/core/colors";
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             flexGrow: 1,
+        },
+        delete: {
+            color: red.A700,
         },
 
     }),
@@ -41,7 +45,7 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
                 <Typography>{props.task.name}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" onClick={props.onDelete}>Delete</Button>
+                <Button className={classes.delete} size="small" onClick={props.onDelete}>Delete</Button>
             </CardActions>
         </Card>
     )
@@ -115,6 +119,11 @@ class TaskList extends React.Component<TaskProp, TaskState> {
         const body: Task = {
             name: task.name
         }
+        // verify valid task
+        if (!isValidTask(body)) {
+            this.props.onError('Task not valid');
+        }
+
         fetch(url, {
             method: "POST",
             headers: {
@@ -130,6 +139,7 @@ class TaskList extends React.Component<TaskProp, TaskState> {
         setTimeout(() => this.getTasks(), 300);
     } 
 
+    
 
     getTasks() {
         const url = '/api/tasks/index'
@@ -145,5 +155,8 @@ class TaskList extends React.Component<TaskProp, TaskState> {
 
 }
 
+function isValidTask(task: Task) {
+    return task.name != "";
+}
 
 export default TaskList;
