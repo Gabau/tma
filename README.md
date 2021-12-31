@@ -62,3 +62,17 @@ run the following to restart psql.
 ```
 sudo service postgresql restart
 ```
+
+
+Installation instructions:
+
+```bash
+bin/bundle install
+bin/rails yarn:install
+```
+
+Serve with
+
+```
+rails s
+```
