@@ -7,3 +7,12 @@ type Task = {
 }
 
 export default Task;
+
+export function clone(task: Task): Task {
+    return {
+        name: task.name,
+        description: task.description,
+        tags: task.tags,
+        id: task.id,
+    }
+}

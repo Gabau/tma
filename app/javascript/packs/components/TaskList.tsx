@@ -1,11 +1,11 @@
-import { Button, Card, CardActions, CardContent, List, ListItem, Theme, Typography } from "@material-ui/core";
-import { FilterTiltShiftTwoTone } from "@material-ui/icons";
+import { Button, Card, CardActions, CardContent, Hidden, List, ListItem, TextField, Theme, Typography } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/styles";
 import * as React from "react";
-import { classicNameResolver } from "typescript";
 import TaskForm from "./forms/TaskForm";
-import Task from "./data/Task";
-import { red } from "@material-ui/core/colors";
+import Task, { clone } from "./data/Task";
+import { green, red } from "@material-ui/core/colors";
+import TaskCard from "./TaskCard";
+import { getCSRFToken } from "./util/csrfGenerator";
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -14,6 +14,9 @@ const useStyle = makeStyles((theme: Theme) =>
         },
         delete: {
             color: red.A700,
+        },
+        edit: {
+            color: green.A700,
         },
 
     }),
@@ -31,25 +34,6 @@ type TaskState = {
     toRender: React.ReactNode;
 }
 
-type TaskCardProps = {
-    task: Task;
-    onDelete: () => void;
-}
-
-
-const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
-    const classes = useStyle();
-    return (
-        <Card variant="outlined" className={ classes.root }>
-            <CardContent>
-                <Typography>{props.task.name}</Typography>
-            </CardContent>
-            <CardActions>
-                <Button className={classes.delete} size="small" onClick={props.onDelete}>Delete</Button>
-            </CardActions>
-        </Card>
-    )
-}
 
 const defaultList: Task[] = [];
 
@@ -67,26 +51,29 @@ class TaskList extends React.Component<TaskProp, TaskState> {
         return (
             <React.Fragment>
                 <TaskForm taskConsumer={this.createHandler.bind(this)}></TaskForm>
-                <List>
-                    {this.state.toRender}
-                </List>
+                {this.generateList(this.state.toRender)}
             </React.Fragment>
         )
     }
 
     generateTaskCard(task: Task): React.ReactNode {
         return (
-            <ListItem>
-                 <TaskCard onDelete={this.deleteHandler(task).bind(this)} task={task} />
+            <ListItem key={task.id}>
+                 <TaskCard onError={this.props.onError} onDelete={this.deleteHandler(task).bind(this)} task={task} />
             </ListItem>
         )
+    }
+
+    generateList(node: React.ReactNode): React.ReactNode {
+        return (
+            <List>{node}</List>)
     }
 
     deleteHandler(task: Task) {
         
         return () => {
             const url = `/api/tasks/destroy/${task.id}`
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+        const token = getCSRFToken();
             const filtered = this.state.tasks.filter((t) => t.id != task.id);
             this.setState({
                 tasks: filtered,
@@ -115,7 +102,7 @@ class TaskList extends React.Component<TaskProp, TaskState> {
 
     createHandler(task: Task) {
         const url = '/api/tasks/create'
-        const token = document.querySelector('meta[name="csrf-token"]').content;
+        const token = getCSRFToken();
         const body: Task = {
             name: task.name
         }

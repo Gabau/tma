@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'tasks/index'
     post 'tasks/create'
+    post 'tasks/edit/:id', to: 'tasks#edit'
     get 'tasks/show/:id', to: 'tasks#show'
     delete 'tasks/destroy/:id', to: 'tasks#destroy'
   end

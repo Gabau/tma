@@ -13,6 +13,11 @@ class Api::TasksController < ApplicationController
     end
   end
 
+  def edit
+    task&.update(task_params)
+    render json: { message: 'Task updated' }
+  end
+
   def show
     if task
       render json: task
