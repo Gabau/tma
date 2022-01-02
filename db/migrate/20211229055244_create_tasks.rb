@@ -3,7 +3,6 @@ class CreateTasks < ActiveRecord::Migration[6.1]
     create_table :tasks do |t|
       t.string :name, null: false
       t.text :description, default: ""
-      t.text :tags, array: true, default: []
       t.timestamps
     end
   end

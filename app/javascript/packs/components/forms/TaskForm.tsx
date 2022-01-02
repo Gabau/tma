@@ -1,5 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField } from '@material-ui/core';
 import * as React from 'react';
+import Tag from '../data/Tag';
 import Task from '../data/Task';
 
 type TaskFormProp = {
@@ -9,6 +10,8 @@ type TaskFormProp = {
 type TaskFormState = {
     isOpen: boolean;
     task: Task;
+    tags: Tag[];
+    tag_name: string;
 }
 
 
@@ -23,6 +26,8 @@ export default class TaskForm extends React.Component<TaskFormProp, TaskFormStat
         this.state = {
             isOpen: false,
             task: { name: "" },
+            tags: [],
+            tag_name: "",
         }
         this.close = this.close.bind(this);
         this.open = this.open.bind(this);
@@ -42,7 +47,6 @@ export default class TaskForm extends React.Component<TaskFormProp, TaskFormStat
     render() {
         return (
             <div>
-                
                 <Button variant="outlined" color="primary"  onClick={this.open}>
                     Add Task
                 </Button>
@@ -64,6 +68,17 @@ export default class TaskForm extends React.Component<TaskFormProp, TaskFormStat
                                     fullWidth
                                     value={this.state.task.name}
                                     onChange={(event) => this.setState({ task: { name: event.target.value } })}
+                                />
+                                <TextField
+                                    required={false}
+                                    autoFocus={false}
+                                    margin="dense"
+                                    id="tag"
+                                    label="Tag name"
+                                    fullWidth
+                                    value={this.state.tag_name}
+                                    onChange={(event) => this.setState({ tag_name: event.target.value })}
+                                    onKeyPress={(e) => {e.key === 'Enter' && e.preventDefault()}}
                                 />
                                 <Button variant="outlined" color="primary" type="submit">
                                     Add task                            

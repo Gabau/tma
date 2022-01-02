@@ -2,6 +2,7 @@ import { Button, Card, CardActions, CardContent, createStyles, makeStyles, TextF
 import { green, red } from "@material-ui/core/colors";
 import * as React from "react";
 import Task, { clone } from "./data/Task";
+import TagBox from "./tags/TagBox";
 import { getCSRFToken } from "./util/csrfGenerator";
 
 const useStyle = makeStyles((theme: Theme) =>
@@ -34,6 +35,7 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     const baseContent = (
         <CardContent>
             <Typography>{task.name}</Typography>
+            <TagBox task={task}></TagBox>
         </CardContent>
     );
     const editContent = (
