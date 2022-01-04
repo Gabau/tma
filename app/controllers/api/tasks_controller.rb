@@ -4,23 +4,33 @@ class Api::TasksController < ApplicationController
     render json: tasks.to_json(:include => :tags)
   end
 
+  # Create takes in the following JSON body
+  # { 
+  #   name: ${name},
+  #   description: ${description},
+  #   tags: ${array_of_tags}
+  # } 
+  # Renders a json containing the message and the created task
+  # 
+
   def create
     task = Task.create!(task_params)
     if task
       # create the tags
       if params[:tags] == nil
-        render json: { message: 'Successfully created task without tags', task: task, tags: []}
+        render json: { message: 'Successfully created task without tags', task: task.to_json(:include => :tags)}
         return
       end
       params[:tags]&.length&.times do |t|
-        if Tag.exists?(params[:tags][t][:name])
-          # Add tag if it exists
-          tag = Tag.find_by(params[:tags][t][:name])
-          task.tags << tag
-        else
-          # Else create the tag
-          task.tags.create!(params[:tags][t])
-        end  
+        add_tag(t, :tags)
+        # if Tag.exists?(params[:tags][t][:name])
+        #   # Add tag if it exists
+        #   tag = Tag.find_by(params[:tags][t][:name])
+        #   task.tags << tag
+        # else
+        #   # Else create the tag
+        #   task.tags.create!(params[:tags][t])
+        # end  
       end
       render json: { message:  'Successfully created task with tags', task: task, tags: task.tags}
     else
@@ -28,12 +38,40 @@ class Api::TasksController < ApplicationController
     end
   end
 
+
+  # Edit takes in the following params.
+  # { 
+  #   ${TASK_ATTRIBUTES},
+  #   deleted_tags: ${ARRAY_OF_DELETED_TAGS} 
+  #   added_tags: ${ARRAY_OF_CREATED_TAGS} 
+  # }
+  # And renders the message, and the task after edit.
+  #
+
   def edit
     task&.update(task_params)
     # Edit should also update the tags if any
+    # Add tags
+    tag_params = params.permit(:id, :added_tags => [:name, :description], :deleted_tags => [:id, :name, :description])  
+    tag_params[:added_tags]&.length&.times do |t|
+      if Tag.exists?(name: tag_params[:added_tags][t][:name])
+        # Add tag if it exists
+        tag = Tag.find_by(name: tag_params[:added_tags][t][:name])
+        task.tags << tag
+      else
+        # Else create the tag
+        tag = Tag.create!(tag_params[:added_tags][t])
+        task.tags << tag
+      end
+    end
 
+    # Delete tags
+    tag_params[:deleted_tags]&.length&.times do |t|
+      tag = Tag.find_by(id: tag_params[:deleted_tags][t][:id])
+      task&.tags.delete(tag)
+    end
 
-    render json: { message: 'Task updated' }
+    render json: task.to_json(:include => :tags)
   end
 
   def show
@@ -49,13 +87,7 @@ class Api::TasksController < ApplicationController
     render json: { message: 'Task deleted' }
   end
 
-  def tag_query
-    if task
-      render json: { tags: task.tags }
-    else
-      render json: task.errors
-    end
-  end
+
 
   private
 
@@ -63,7 +95,20 @@ class Api::TasksController < ApplicationController
     params.permit(:name, :description)
   end
 
+
   def task
     @task ||= Task.find(params[:id])
+  end
+
+  # params[hash] is the array of tags to add.
+  def add_tag(t, hash)
+    if Tag.exists?(params[hash][t][:name])
+      # Add tag if it exists
+      tag = Tag.find_by(params[hash][t][:name])
+      task.tags << tag
+    else
+      # Else create the tag
+      task.tags.create!(params[hash][t])
+    end
   end
 end

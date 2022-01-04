@@ -1,6 +1,7 @@
 
 import * as React from "react"
 import { useState } from "react";
+import { BrowserRouter } from "react-router-dom";
 import Router from "../routes/Router"
 import Menu from "./components/Menu";
 import ErrorSnackBar from "./components/snackbars/ErrorSnackBar";
@@ -26,12 +27,12 @@ export default () => {
         setErrorOpen(true);
     }
 
-    return (
-        <div>
+    return (    
+        <BrowserRouter>
             <TopBar menuFunc={toggle(true)} />
-            <Menu isOpen={menuIsOpen} onClose={toggle(false)} />
+            <Menu onNavigate={() => setIsOpen(false)} isOpen={menuIsOpen} onClose={toggle(false)} />
             <Router onError={(str) => errorHandler(str)} />
             <ErrorSnackBar isOpen={errorIsOpen} message={errorMessage} onClose={() => setErrorOpen(false)} />
-        </div>
+        </BrowserRouter>
     )
 }

@@ -1,6 +1,8 @@
 import { Button, Card, CardActions, CardContent, createStyles, makeStyles, TextField, Typography } from "@material-ui/core";
 import { green, red } from "@material-ui/core/colors";
 import * as React from "react";
+import { editTaskInDB } from "./api/TaskAPIRequests";
+import EditableTask from "./data/EditableTask";
 import Task, { clone } from "./data/Task";
 import TagBox from "./tags/TagBox";
 import { getCSRFToken } from "./util/csrfGenerator";
@@ -31,45 +33,40 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     const classes = useStyle();
     const [isEdit, setIsEdit] = React.useState(false);
     const EditButtonText = () => isEdit ? <>Save</> : <>Edit</>;
-    const [task, setTask] = React.useState(clone(props.task))
+    // for display, will only be changed after edit.
+    const [task, setTask] = React.useState(clone(props.task));
+    // the task fields to operate on
+    const [taskFields, setTaskFields]  = React.useState({ ...task });
+    const [editableTask, setEditableTask] = React.useState(new EditableTask(task));
+    
     const baseContent = (
         <CardContent>
             <Typography>{task.name}</Typography>
-            <TagBox task={task}></TagBox>
+            <TagBox onError={props.onError} editableTask={editableTask} task={task}></TagBox>
         </CardContent>
     );
     const editContent = (
         <CardContent>
             <form onSubmit={onEdit}>
-            <TextField label="name" onChange={(event) => setTask({ ...task, name: event.target.value })} value={task.name}></TextField>
+                <TextField required={true} label="name" onChange={(event) => setTaskFields({ ...taskFields, name: event.target.value })} value={taskFields.name}></TextField>
             </form>
         </CardContent>
     )
     const content = isEdit ? editContent : baseContent;
 
-    function onEdit() {
+    function onEdit(e) {
+        e.preventDefault();
         // to Send the api request and refresh the card on error
-        const url = `/api/tasks/edit/${task.id}`;
-        const token = getCSRFToken();
         if (isEdit) {
             // when edit is done, send the api request
             // to update.
-            
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    "X-CSRF-Token": token,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(task)
-            }).then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error("Network response was not ok");
-            }).catch(error => props.onError(error.message));
+            // generate the edited card
+            setEditableTask(editableTask.modifyFields(taskFields));
+            editTaskInDB(editableTask).catch(error => props.onError(error.message));
+            setTask(editableTask.buildTask());
         }
-        setIsEdit(!isEdit);
+        // to allow the form submission to occur before switching out
+        setTimeout(() => setIsEdit(!isEdit), 10);
     }
     return (
         <Card variant="outlined" className={ classes.root }>

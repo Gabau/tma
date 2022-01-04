@@ -23,7 +23,10 @@ class Api::TagController < ApplicationController
   end
 
   def destroy
+    tag&.destroy
+    render json: { message: 'Tag deleted' }
   end
+  
 
   private
 
@@ -31,5 +34,8 @@ class Api::TagController < ApplicationController
     params.permit(:name, :description)
   end
 
+  def tag
+    @tag ||= Tag.find(params[:id])
+  end
 
 end

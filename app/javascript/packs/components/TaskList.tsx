@@ -2,10 +2,10 @@ import { Button, Card, CardActions, CardContent, Hidden, List, ListItem, TextFie
 import { createStyles, makeStyles } from "@material-ui/styles";
 import * as React from "react";
 import TaskForm from "./forms/TaskForm";
-import Task, { clone } from "./data/Task";
+import Task from "./data/Task";
 import { green, red } from "@material-ui/core/colors";
 import TaskCard from "./TaskCard";
-import { getCSRFToken } from "./util/csrfGenerator";
+import { createTaskInDB, deleteTaskInDB, getTasksFromDB } from "./api/TaskAPIRequests";
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -70,23 +70,15 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     }
 
     deleteHandler(task: Task) {
-        
         return () => {
-            const url = `/api/tasks/destroy/${task.id}`
-        const token = getCSRFToken();
+            // render the delete
             const filtered = this.state.tasks.filter((t) => t.id != task.id);
             this.setState({
                 tasks: filtered,
                 toRender: filtered.map((val) => this.generateTaskCard(val)),
             })
             // perform the delete via api
-            fetch(url, {
-                method: "DELETE",
-                headers: {
-                    "X-CSRF-Token": token,
-                    "Content-Type": "application/json"
-                }
-            })
+            deleteTaskInDB(task)
             .then(response => {
                 if (response.ok) {
                     return response.json();
@@ -101,42 +93,26 @@ class TaskList extends React.Component<TaskProp, TaskState> {
     }
 
     createHandler(task: Task) {
-        const url = '/api/tasks/create'
-        const token = getCSRFToken();
-        const body: Task = {
-            name: task.name
-        }
         // verify valid task
-        if (!isValidTask(body)) {
+        const default_values = { description: "", tags: [] };
+        const to_add = { ...task, ...default_values };
+        if (!isValidTask(to_add)) {
             this.props.onError('Task not valid');
         }
-
-        fetch(url, {
-            method: "POST",
-            headers: {
-                "X-CSRF-Token": token,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(body),
-        }).catch(error => this.props.onError(error.message));
+        createTaskInDB(to_add).catch(error => this.props.onError(error.message));
         const temp = this.state.tasks.slice();
-        temp.unshift(body);
+        temp.unshift(to_add);
         this.setState({tasks: temp, toRender: temp.map(val => this.generateTaskCard(val))});
         // to ensure that the database has been updated
         setTimeout(() => this.getTasks(), 300);
-    } 
+    }
 
     
 
     getTasks() {
         const url = '/api/tasks/index'
-        const response =  fetch(url)
-            .then(response => {
-                if (response.ok) {
-                    return response.json();
-                }
-                throw new Error("Network response not okay");
-            }).then(response => this.setState({ tasks: response, toRender: response.map(val => this.generateTaskCard(val)) }))
+        getTasksFromDB()
+            .then(response => this.setState({ tasks: response, toRender: response.map(val => this.generateTaskCard(val)) }))
             .catch(error => this.props.onError(error.message));
     }
 

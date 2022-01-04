@@ -10,31 +10,41 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import { MenuItem, MenuList } from '@material-ui/core';
+import { useNavigate } from 'react-router-dom';
 
 const useStyles = makeStyles({
-  list: {
-    width: 250,
-  },
-  fullList: {
-    width: 'auto',
-  },
+    list: {
+        width: 250,
+    },
+    fullList: {
+        width: 'auto',
+    },
 });
 
 type Prop = {
     isOpen: boolean,
-    onClose: (event: React.KeyboardEvent | React.MouseEvent) => void
+    onClose: (event: React.KeyboardEvent | React.MouseEvent) => void,
+    onNavigate: () => void,
 };
 
 export default function Menu(props: Prop) {
-  const classes = useStyles();
-  
-  return (
-      <div>
-          <Drawer anchor="left" open={props.isOpen} onClose={props.onClose}>
-              Placeholder
-          </Drawer>
-      </div>
-  )
+    const classes = useStyles();
+    const navigate = useNavigate();
+    const nav = (val: string) => {
+        props.onNavigate();
+        navigate(val);
+    } 
+    return (
+        <div>
+            <Drawer anchor="left" open={props.isOpen} onClose={props.onClose}>
+                <MenuList className={classes.list}>
+                    <MenuItem onClick={() => nav('/')}>Home</MenuItem>
+                    <MenuItem onClick={() => nav('/tags')}>Tags</MenuItem>
+                </MenuList>
+            </Drawer>
+        </div>
+    )
 
 
 }
