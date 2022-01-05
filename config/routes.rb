@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   namespace :api do
     get 'tag/index'
-    get 'tag/create'
+    post 'tag/create'
     get 'tag/show/:id', to: 'tag#show'
-    get 'tag/destroy'
+    delete 'tag/destroy/:id', to: 'tag#destroy'
+    post 'tag/edit/:id', to: 'tag#edit'
   end
   namespace :api do
     get 'tasks/index'

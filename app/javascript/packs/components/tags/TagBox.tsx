@@ -22,7 +22,7 @@ type TagBoxProps = {
     onError: (msg: string) => void,
 }
 
-function TagBox(props: TagBoxProps): React.ReactNode {
+const TagBox: React.FC<TagBoxProps> = (props: TagBoxProps) => {
     const classes = useStyles();
     const [tags, setTags] = React.useState(props.task.tags);
     function deleteHandler(tag: Tag) {
@@ -58,7 +58,10 @@ function TagBox(props: TagBoxProps): React.ReactNode {
         <div className={classes.root}>
             <Button
                 onClick={addHandler}>Add tag</Button>
-            {tags.map((tag: Tag) => <TagChip tag={tag} onDelete={deleteHandler} />)}
+            {tags.map((tag: Tag) => 
+                <div key={tag.id}>
+                    <TagChip tag={tag} onDelete={deleteHandler} />
+                </div>)}
         </div>
     )
 }

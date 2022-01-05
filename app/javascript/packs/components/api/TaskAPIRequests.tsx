@@ -2,6 +2,7 @@ import { Repeat } from "@material-ui/icons";
 import EditableTask from "../data/EditableTask";
 import Task from "../data/Task";
 import { getCSRFToken } from "../util/csrfGenerator";
+import { checkResponse } from "./APIUtil";
 
 
 
@@ -37,8 +38,8 @@ export async function deleteTaskInDB(task: Task): Promise<Response> {
         method: "DELETE",
         headers: {
             "X-CSRF-Token": token,
-            "Content-Type": "application/json"
-        }
+            "Content-Type": "application/json",
+        },
     }).then(checkResponse);
 
 }
@@ -64,11 +65,5 @@ export async function editTaskInDB(editableTask: EditableTask): Promise<EditResp
 
 }
 
-function checkResponse(response: Response) {
-    
-    if (response.ok) {
-        return response.json();
-    }
-    throw new Error("Network response was not ok");
-}
+
 

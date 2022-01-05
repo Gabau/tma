@@ -4,8 +4,8 @@ import * as React from "react";
 import { editTaskInDB } from "./api/TaskAPIRequests";
 import EditableTask from "./data/EditableTask";
 import Task, { clone } from "./data/Task";
+import DisplayTextField from "./forms/DisplayTextField";
 import TagBox from "./tags/TagBox";
-import { getCSRFToken } from "./util/csrfGenerator";
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -38,22 +38,21 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     // the task fields to operate on
     const [taskFields, setTaskFields]  = React.useState({ ...task });
     const [editableTask, setEditableTask] = React.useState(new EditableTask(task));
-    
-    const baseContent = (
-        <CardContent>
-            <Typography>{task.name}</Typography>
-            <TagBox onError={props.onError} editableTask={editableTask} task={task}></TagBox>
-        </CardContent>
-    );
     const editContent = (
         <CardContent>
             <form onSubmit={onEdit}>
-                <TextField required={true} label="name" onChange={(event) => setTaskFields({ ...taskFields, name: event.target.value })} value={taskFields.name}></TextField>
+                <DisplayTextField 
+                    required={true} 
+                    label="name" 
+                    onChange={(event => setTaskFields({...taskFields, name: event.target.value}))} 
+                    value={taskFields.name} 
+                    displayText={<Typography>{task.name}</Typography>}
+                    isEdit={isEdit}
+                    autoFocus={true} />
+                    <TagBox onError={props.onError} editableTask={editableTask} task={task} />
             </form>
         </CardContent>
     )
-    const content = isEdit ? editContent : baseContent;
-
     function onEdit(e) {
         e.preventDefault();
         // to Send the api request and refresh the card on error
@@ -70,7 +69,7 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     }
     return (
         <Card variant="outlined" className={ classes.root }>
-            { content }
+            { editContent }
             <CardActions>
                 <Button className={classes.edit} size="small" onClick={onEdit}><EditButtonText /></Button>
                 <Button className={classes.delete} size="small" onClick={props.onDelete}>Delete</Button>

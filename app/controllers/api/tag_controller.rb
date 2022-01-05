@@ -28,6 +28,10 @@ class Api::TagController < ApplicationController
   end
   
 
+  def edit
+    tag&.update(tag_params)
+    render json: { message: 'Tag updated', tag: tag }
+  end
   private
 
   def tag_params

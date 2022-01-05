@@ -10,7 +10,7 @@ type RouterProps = {
 export default (props: RouterProps) => (
     <Routes>
         <Route path="/" element={<HomePage onError={props.onError}/>} />
-        <Route path="/tags" element={<TagIndex />} />
+        <Route path="/tags" element={<TagIndex onError={props.onError} />} />
     </Routes>
 )
 
