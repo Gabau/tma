@@ -8,7 +8,7 @@ class Api::TasksController < ApplicationController
   # { 
   #   name: ${name},
   #   description: ${description},
-  #   tags: ${array_of_tags}
+  #   tags: ${array_of_tags} (just the names)
   # } 
   # Renders a json containing the message and the created task
   # 
@@ -17,20 +17,20 @@ class Api::TasksController < ApplicationController
     task = Task.create!(task_params)
     if task
       # create the tags
-      if params[:tags] == nil
+      tag_params = params.permit(:tags => [:name])
+      if tag_params[:tags] == nil
         render json: { message: 'Successfully created task without tags', task: task.to_json(:include => :tags)}
         return
       end
-      params[:tags]&.length&.times do |t|
-        add_tag(t, :tags)
-        # if Tag.exists?(params[:tags][t][:name])
-        #   # Add tag if it exists
-        #   tag = Tag.find_by(params[:tags][t][:name])
-        #   task.tags << tag
-        # else
-        #   # Else create the tag
-        #   task.tags.create!(params[:tags][t])
-        # end  
+      tag_params[:tags]&.length&.times do |t|
+        if Tag.exists?(tag_params[:tags][t][:name])
+          # Add tag if it exists
+          tag = Tag.find_by(tag_params[:tags][t][:name])
+          task.tags << tag
+        else
+          # Else create the tag
+          task.tags.create!(tag_params[:tags][t])
+        end  
       end
       render json: { message:  'Successfully created task with tags', task: task, tags: task.tags}
     else

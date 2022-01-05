@@ -23,9 +23,9 @@ const useStyles = makeStyles({
 });
 
 type Prop = {
-    isOpen: boolean,
-    onClose: (event: React.KeyboardEvent | React.MouseEvent) => void,
-    onNavigate: () => void,
+    isOpen: boolean;
+    onClose: (event: React.KeyboardEvent | React.MouseEvent) => void;
+    onNavigate: () => void;
 };
 
 export default function Menu(props: Prop) {
@@ -34,7 +34,7 @@ export default function Menu(props: Prop) {
     const nav = (val: string) => {
         props.onNavigate();
         navigate(val);
-    } 
+    };
     return (
         <div>
             <Drawer anchor="left" open={props.isOpen} onClose={props.onClose}>
@@ -44,7 +44,5 @@ export default function Menu(props: Prop) {
                 </MenuList>
             </Drawer>
         </div>
-    )
-
-
+    );
 }
