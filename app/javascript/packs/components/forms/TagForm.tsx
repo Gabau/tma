@@ -32,6 +32,9 @@ const TagForm: React.FC<TagFormProps> = (props: TagFormProps) => {
         <form
             onSubmit={(e) => {
                 e.preventDefault();
+                if (tag.name === '') {
+                    return;
+                }
                 props.onSubmit(tag);
                 setTag({ name: '' });
             }}

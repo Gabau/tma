@@ -23,9 +23,9 @@ class Api::TasksController < ApplicationController
         return
       end
       tag_params[:tags]&.length&.times do |t|
-        if Tag.exists?(tag_params[:tags][t][:name])
+        if Tag.exists?(name: tag_params[:tags][t][:name])
           # Add tag if it exists
-          tag = Tag.find_by(tag_params[:tags][t][:name])
+          tag = Tag.find_by(name: tag_params[:tags][t][:name])
           task.tags << tag
         else
           # Else create the tag
@@ -67,7 +67,7 @@ class Api::TasksController < ApplicationController
 
     # Delete tags
     tag_params[:deleted_tags]&.length&.times do |t|
-      tag = Tag.find_by(id: tag_params[:deleted_tags][t][:id])
+      tag = Tag.find_by(name: tag_params[:deleted_tags][t][:name])
       task&.tags.delete(tag)
     end
 

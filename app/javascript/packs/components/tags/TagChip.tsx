@@ -4,11 +4,13 @@ import Tag from '../data/Tag';
 
 type TagChipProps = {
     tag: Tag;
-    onDelete: (tag: Tag) => void;
+    onDelete?: (tag: Tag) => void;
 };
 
-const TagChip: React.FC<TagChipProps> = (props: TagChipProps) => {
-    return <Chip size="small" label={props.tag.name} onDelete={(event) => props.onDelete(props.tag)} color="primary" />;
+export const TagChip: React.FC<TagChipProps> = (props: TagChipProps) => {
+    let onDelete: (event: any) => void = undefined;
+    if (props.onDelete) {
+        onDelete = (event) => props.onDelete(props.tag);
+    }
+    return <Chip size="small" label={props.tag.name} onDelete={onDelete} color="primary" />;
 };
-
-export default TagChip;

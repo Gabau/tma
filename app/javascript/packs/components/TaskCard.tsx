@@ -12,9 +12,13 @@ import { green, red } from '@material-ui/core/colors';
 import * as React from 'react';
 import { editTaskInDB } from './api/TaskAPIRequests';
 import EditableTask from './data/EditableTask';
+import Tag from './data/Tag';
 import Task, { clone } from './data/Task';
+import TagAutoCompleteSelector from './dropdowns/TagAutoCompleteSelector';
 import DisplayTextField from './forms/DisplayTextField';
+import TagForm from './forms/TagForm';
 import TagBox from './tags/TagBox';
+import TagList from './tags/TagList';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -45,6 +49,25 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     // the task fields to operate on
     const [taskFields, setTaskFields] = React.useState({ ...task });
     const [editableTask, setEditableTask] = React.useState(new EditableTask(task));
+    const [editableTags, setEditableTags] = React.useState(editableTask.getTags());
+
+    function deleteHandler(tag: Tag) {
+        try {
+            setEditableTask(editableTask.deleteTag(tag));
+            setEditableTags(editableTask.getTags().slice());
+        } catch (error) {
+            props.onError(error.message);
+        }
+    }
+
+    function addHandler(tag: Tag) {
+        try {
+            setEditableTask(editableTask.addTag(tag));
+            setEditableTags(editableTask.getTags().slice());
+        } catch (error) {
+            props.onError(error.message);
+        }
+    }
     const editContent = (
         <CardContent>
             <form onSubmit={onEdit}>
@@ -57,8 +80,14 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
                     isEdit={isEdit}
                     autoFocus={true}
                 />
-                <TagBox onError={props.onError} editableTask={editableTask} task={task} />
             </form>
+            <CardTagList
+                isEdit={isEdit}
+                onAdd={addHandler}
+                onDelete={deleteHandler}
+                tags={task.tags}
+                editableTags={editableTags}
+            />
         </CardContent>
     );
     function onEdit(e) {
@@ -69,9 +98,13 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
             // to update.
             // generate the edited card
             setEditableTask(editableTask.modifyFields(taskFields));
-            editTaskInDB(editableTask).catch((error) => props.onError(error.message));
-            setTask(editableTask.buildTask());
+            editTaskInDB(editableTask)
+                .catch((error) => props.onError(error.message))
+                .then((response) => setTask({ ...task, ...response }))
+                .then(() => setEditableTask(editableTask.reset(task)));
+            // set delete to undefined, to remove button
         }
+
         // to allow the form submission to occur before switching out
         setTimeout(() => setIsEdit(!isEdit), 10);
     }
@@ -87,6 +120,28 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
                 </Button>
             </CardActions>
         </Card>
+    );
+};
+
+type CardTagListProps = {
+    isEdit: boolean;
+    onAdd: (tag: Tag) => void;
+    onDelete: (tag: Tag) => void;
+    tags: Tag[];
+    editableTags: Tag[];
+};
+
+const CardTagList: React.FC<CardTagListProps> = (props: CardTagListProps) => {
+    const [editableTags, setEditableTags] = React.useState(props.editableTags);
+    React.useEffect(() => setEditableTags(props.editableTags), [props.editableTags]);
+    if (!props.isEdit) {
+        return <TagList tags={props.tags} />;
+    }
+    return (
+        <div>
+            <TagForm onSubmit={props.onAdd} />
+            <TagList tags={editableTags} onDelete={props.onDelete} />
+        </div>
     );
 };
 
