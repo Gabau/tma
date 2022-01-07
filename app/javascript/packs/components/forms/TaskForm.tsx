@@ -11,8 +11,6 @@ import { ThreeSixty } from '@material-ui/icons';
 import * as React from 'react';
 import Tag from '../data/Tag';
 import Task from '../data/Task';
-import TagIndex from '../pages/TagIndex';
-import TagBox from '../tags/TagBox';
 import TagList from '../tags/TagList';
 import TagForm from './TagForm';
 

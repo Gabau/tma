@@ -23,7 +23,7 @@ const TagAutoCompleteSelector: React.FC<TagAutoCompleteSelectorProps> = (props: 
             onInputChange={(event, newInputValue) => {
                 props.onChange(newInputValue);
             }}
-            renderInput={(params) => <TextField {...params} label="Combo box" variant="outlined" />}
+            renderInput={(params) => <TextField {...params} label="Tag Name" variant="outlined" />}
         />
     );
 };

@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import * as React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { editTaskInDB } from './api/TaskAPIRequests';
 import EditableTask from './data/EditableTask';
 import Tag from './data/Tag';
@@ -50,7 +51,7 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     const [taskFields, setTaskFields] = React.useState({ ...task });
     const [editableTask, setEditableTask] = React.useState(new EditableTask(task));
     const [editableTags, setEditableTags] = React.useState(editableTask.getTags());
-
+    const navigate = useNavigate();
     function deleteHandler(tag: Tag) {
         try {
             setEditableTask(editableTask.deleteTag(tag));
@@ -117,6 +118,9 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
                 </Button>
                 <Button className={classes.delete} size="small" onClick={props.onDelete}>
                     Delete
+                </Button>
+                <Button size="small" onClick={() => navigate(`/tasks/${task.id}`)}>
+                    More details
                 </Button>
             </CardActions>
         </Card>
