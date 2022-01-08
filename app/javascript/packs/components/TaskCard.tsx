@@ -1,24 +1,13 @@
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    createStyles,
-    makeStyles,
-    TextField,
-    Typography,
-} from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import * as React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { editTaskInDB } from './api/TaskAPIRequests';
 import EditableTask from './data/EditableTask';
 import Tag from './data/Tag';
 import Task, { clone } from './data/Task';
-import TagAutoCompleteSelector from './dropdowns/TagAutoCompleteSelector';
 import DisplayTextField from './forms/DisplayTextField';
 import TagForm from './forms/TagForm';
-import TagBox from './tags/TagBox';
 import TagList from './tags/TagList';
 
 const useStyle = makeStyles((theme: Theme) =>

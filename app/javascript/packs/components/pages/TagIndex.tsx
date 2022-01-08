@@ -1,9 +1,4 @@
 import {
-    Card,
-    CardContent,
-    Grid,
-    List,
-    ListItem,
     makeStyles,
     Paper,
     TableBody,
@@ -16,7 +11,7 @@ import {
     Chip,
     Typography,
 } from '@material-ui/core';
-import { blue, green, red } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
 import * as React from 'react';
 import { deleteTag, editTag, getTags } from '../api/TagAPIRequests';
 import Tag from '../data/Tag';
@@ -117,8 +112,7 @@ const TagItem: React.FC<TagItemProps> = (props: TagItemProps) => {
     // perform edit on a seperate data structure,
     // and then update the form
     // have to switch the cells corresponding to the content
-    // todo: add edit functionality on the tag index page, also add redirect into
-    // each tags own page
+    // todo: add redirect for each tag to landing page
     const editButtonText = isEdit ? 'Save' : 'Edit';
     return (
         <TableRow>

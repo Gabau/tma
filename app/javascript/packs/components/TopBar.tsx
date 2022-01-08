@@ -1,21 +1,7 @@
-import {
-    AppBar,
-    Breadcrumbs,
-    Button,
-    createStyles,
-    IconButton,
-    makeStyles,
-    Theme,
-    Toolbar,
-    Typography,
-    Link,
-} from '@material-ui/core';
-import { Link as RouterLink } from 'react-router-dom';
-import MenuIcon from '@material-ui/icons/Menu';
-import * as React from 'react';
-import useTitle from './hooks/TitleHook';
-import { isWhiteSpaceLike } from 'typescript';
+import { AppBar, createStyles, IconButton, makeStyles, Theme, Toolbar, Typography } from '@material-ui/core';
 import { red } from '@material-ui/core/colors';
+import * as React from 'react';
+import MenuIcon from '@material-ui/icons/Menu';
 import SearchBar from './forms/SearchBar';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,4 +1,3 @@
-import { Repeat } from '@material-ui/icons';
 import EditableTask from '../data/EditableTask';
 import Task from '../data/Task';
 import { getCSRFToken } from '../util/csrfGenerator';

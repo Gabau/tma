@@ -1,15 +1,4 @@
-import {
-    Button,
-    Card,
-    CardActions,
-    CardContent,
-    Hidden,
-    List,
-    ListItem,
-    TextField,
-    Theme,
-    Typography,
-} from '@material-ui/core';
+import { List, ListItem, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import * as React from 'react';
 import TaskForm from './forms/TaskForm';
@@ -77,7 +66,7 @@ const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
         if (!isValidTask(to_add)) {
             props.onError('Task not valid');
         }
-        createTaskInDB(to_add).catch((error) => thiprops.onError(error.message));
+        createTaskInDB(to_add).catch((error) => props.onError(error.message));
         const temp = state.tasks.slice();
         temp.unshift(to_add);
         setState({ tasks: temp, toRender: temp.map((val) => generateTaskCard(val)) });

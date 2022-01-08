@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import { TagFacesSharp } from '@material-ui/icons';
 import * as React from 'react';
 import Tag from '../data/Tag';
 import { TagChip } from './TagChip';

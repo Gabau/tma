@@ -1,7 +1,7 @@
 // a form for selecting tags for a task
 // or creating one immediately
 
-import { TextField, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import * as React from 'react';
 import { getTags } from '../api/TagAPIRequests';
 import Tag from '../data/Tag';

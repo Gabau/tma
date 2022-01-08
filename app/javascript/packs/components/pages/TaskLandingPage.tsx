@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 import * as React from 'react';
 import { useParams } from 'react-router';
 import { getTasksFromDB } from '../api/TaskAPIRequests';
-import Task, { EMPTY_TASK } from '../data/Task';
+import { EMPTY_TASK } from '../data/Task';
 import TagList from '../tags/TagList';
 
 const TaskLandingPage: React.FC = () => {

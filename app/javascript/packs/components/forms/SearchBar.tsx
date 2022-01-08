@@ -7,7 +7,6 @@ import { makeStyles, TextField, Theme, Typography } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import * as React from 'react';
 import { useEffect } from 'react';
-import { isClassExpression } from 'typescript';
 import { getTasksFromDB } from '../api/TaskAPIRequests';
 import Task from '../data/Task';
 
