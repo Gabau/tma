@@ -17,6 +17,7 @@ import Task from './data/Task';
 import { green, red } from '@material-ui/core/colors';
 import TaskCard from './TaskCard';
 import { createTaskInDB, deleteTaskInDB, getTasksFromDB } from './api/TaskAPIRequests';
+import { useState } from 'react';
 
 const useStyle = makeStyles((theme: Theme) =>
     createStyles({
@@ -43,78 +44,65 @@ type TaskState = {
 
 const defaultList: Task[] = [];
 
-class TaskList extends React.Component<TaskProp, TaskState> {
-    constructor(props: TaskProp) {
-        super(props);
-        this.state = {
-            tasks: defaultList,
-            toRender: defaultList.map((val) => this.generateTaskCard(val)),
-        };
-        this.getTasks();
+const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
+    const [state, setState] = useState({ tasks: [], toRender: [] });
+    React.useEffect(() => refresh(), []);
+    function refresh() {
+        getTasksFromDB()
+            .then((response) => setState({ tasks: response, toRender: response.map((val) => generateTaskCard(val)) }))
+            .catch((error) => props.onError(error.message));
     }
 
-    render() {
-        return (
-            <React.Fragment>
-                <TaskForm taskConsumer={this.createHandler.bind(this)}></TaskForm>
-                {this.generateList(this.state.toRender)}
-            </React.Fragment>
-        );
-    }
-
-    generateTaskCard(task: Task): React.ReactNode {
-        return (
-            <ListItem key={task.id}>
-                <TaskCard onError={this.props.onError} onDelete={this.deleteHandler(task).bind(this)} task={task} />
-            </ListItem>
-        );
-    }
-
-    generateList(node: React.ReactNode): React.ReactNode {
-        return <List>{node}</List>;
-    }
-
-    deleteHandler(task: Task) {
+    function deleteHandler(task: Task) {
         return () => {
             // render the delete
-            const filtered = this.state.tasks.filter((t) => t.id != task.id);
-            this.setState({
+            const filtered = state.tasks.filter((t) => t.id != task.id);
+            setState({
                 tasks: filtered,
-                toRender: filtered.map((val) => this.generateTaskCard(val)),
+                toRender: filtered.map((val) => generateTaskCard(val)),
             });
             // perform the delete via api
             deleteTaskInDB(task).catch((error) => {
-                this.props.onError(error.message);
+                props.onError(error.message);
 
-                this.getTasks(); // to refresh the list
+                refresh(); // to refresh the list
             });
         };
     }
 
-    createHandler(task: Task) {
+    function createHandler(task: Task) {
         // verify valid task
         const default_values = { description: '', tags: [] };
         const to_add = { ...default_values, ...task };
         if (!isValidTask(to_add)) {
-            this.props.onError('Task not valid');
+            props.onError('Task not valid');
         }
-        createTaskInDB(to_add).catch((error) => this.props.onError(error.message));
-        const temp = this.state.tasks.slice();
+        createTaskInDB(to_add).catch((error) => thiprops.onError(error.message));
+        const temp = state.tasks.slice();
         temp.unshift(to_add);
-        this.setState({ tasks: temp, toRender: temp.map((val) => this.generateTaskCard(val)) });
+        setState({ tasks: temp, toRender: temp.map((val) => generateTaskCard(val)) });
         // to ensure that the database has been updated
-        setTimeout(() => this.getTasks(), 300);
+        setTimeout(() => refresh(), 300);
+    }
+    function generateList(node: React.ReactNode): React.ReactNode {
+        return <List>{node}</List>;
     }
 
-    getTasks() {
-        const url = '/api/tasks/index';
-        getTasksFromDB()
-            .then((response) =>
-                this.setState({ tasks: response, toRender: response.map((val) => this.generateTaskCard(val)) }),
-            )
-            .catch((error) => this.props.onError(error.message));
+    function generateTaskCard(task: Task): React.ReactNode {
+        return (
+            <ListItem key={task.id}>
+                <TaskCard onError={props.onError} onDelete={deleteHandler(task)} task={task} />
+            </ListItem>
+        );
     }
-}
+
+    return (
+        <React.Fragment>
+            <TaskForm taskConsumer={createHandler}></TaskForm>
+            {generateList(state.toRender)}
+        </React.Fragment>
+    );
+};
 
 function isValidTask(task: Task) {
     return task.name != '';

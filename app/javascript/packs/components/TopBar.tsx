@@ -16,6 +16,7 @@ import * as React from 'react';
 import useTitle from './hooks/TitleHook';
 import { isWhiteSpaceLike } from 'typescript';
 import { red } from '@material-ui/core/colors';
+import SearchBar from './forms/SearchBar';
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -32,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
             flexGrow: 1,
         },
         links: {
-            color: red,
+            color: red.A100,
         },
     }),
 );
@@ -59,11 +60,12 @@ export default function TopBar(props: Prop) {
                     <Typography variant="h6" className={classes.title}>
                         Task Management Application
                     </Typography>
-                    <Breadcrumbs maxItems={2} aria-label="breadcrumb" className={classes.breadcrumbs}>
+                    {/* <Breadcrumbs maxItems={2} aria-label="breadcrumb" className={classes.breadcrumbs}>
                         <Link component={RouterLink} to="/">
                             Home
                         </Link>
-                    </Breadcrumbs>
+                    </Breadcrumbs> */}
+                    <SearchBar />
                 </Toolbar>
             </AppBar>
             <Toolbar />
