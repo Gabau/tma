@@ -12,7 +12,7 @@ type RouterProps = {
 
 export default (props: RouterProps) => (
     <Routes>
-        <Route path="/" element={<HomePage onError={props.onError} />} />
+        <Route index element={<HomePage onError={props.onError} />} />
         <Route path="/tags" element={<TagIndex onError={props.onError} />} />
         <Route path="/test" element={<TagForm onSubmit={(tag: Tag) => {}} />} />
         <Route path="/tasks/:id" element={<TaskLandingPage />} />

@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 type Prop = {
     menuFunc: (event: React.KeyboardEvent | React.MouseEvent) => void;
+    onError: (msg: string) => void;
 };
 
 export default function TopBar(props: Prop) {
@@ -51,7 +52,7 @@ export default function TopBar(props: Prop) {
                             Home
                         </Link>
                     </Breadcrumbs> */}
-                    <SearchBar />
+                    <SearchBar onError={props.onError} />
                 </Toolbar>
             </AppBar>
             <Toolbar />

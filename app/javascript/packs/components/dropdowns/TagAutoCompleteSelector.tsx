@@ -4,7 +4,7 @@
  */
 
 import { TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import * as React from 'react';
 import Tag from '../data/Tag';
 

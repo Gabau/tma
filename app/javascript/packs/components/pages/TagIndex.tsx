@@ -96,7 +96,8 @@ const TagItem: React.FC<TagItemProps> = (props: TagItemProps) => {
             .then(props.refresh)
             .catch((error) => props.onError(error.message));
     }
-    function handleEdit() {
+    function handleEdit(event) {
+        event.preventDefault();
         setIsEdit(!isEdit);
         // send api request
         editTag(displayTag)

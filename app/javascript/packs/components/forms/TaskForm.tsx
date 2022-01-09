@@ -22,11 +22,14 @@ type TaskFormState = {
     isOpen: boolean;
     task: Task;
     tag_name: string;
+    // the count of the tasks in the current form -- to assign for ids.
+    // for the list to keep track of the keys
+    count: number;
 };
 
 const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
-    const [state, setState] = React.useState({ isOpen: false, task: { name: '', tags: [] }, tag_name: '' });
-    const close = () => setState({ ...state, isOpen: false });
+    const [state, setState] = React.useState({ isOpen: false, task: { name: '', tags: [] }, tag_name: '', count: 0 });
+    const close = () => setState({ task: { name: '', tags: [] }, isOpen: false, tag_name: '', count: state.count });
     const open = () => setState({ ...state, isOpen: true });
 
     function addTask(event) {
@@ -35,7 +38,6 @@ const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
             props.taskConsumer(state.task);
         }
         close();
-        setState({ ...state, task: { name: '', tags: [] } });
     }
     return (
         <div>
@@ -71,8 +73,11 @@ const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
                                 // handle empty input
                                 return;
                             }
+                            const newTag = { ...tag, id: state.count };
+                            // count change
+                            state.count += 1;
                             const newTags = state.task.tags.slice();
-                            newTags.unshift(tag);
+                            newTags.unshift(newTag);
                             setState({ ...state, task: { ...state.task, tags: newTags } });
                         }}
                     />

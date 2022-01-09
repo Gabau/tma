@@ -39,7 +39,7 @@ export default () => {
         <React.StrictMode>
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <TopBar menuFunc={toggle(true)} />
+                    <TopBar menuFunc={toggle(true)} onError={errorHandler} />
                     <Menu onNavigate={() => setIsOpen(false)} isOpen={menuIsOpen} onClose={toggle(false)} />
                     <Router onError={(str) => errorHandler(str)} />
                     <ErrorSnackBar isOpen={errorIsOpen} message={errorMessage} onClose={() => setErrorOpen(false)} />

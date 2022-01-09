@@ -28,34 +28,29 @@ type TaskProp = {
 
 type TaskState = {
     tasks: Task[];
-    toRender: React.ReactNode;
 };
 
 const defaultList: Task[] = [];
 
 const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
-    const [state, setState] = useState({ tasks: [], toRender: [] });
+    const [state, setState] = useState({ tasks: [] });
     React.useEffect(() => refresh(), []);
     function refresh() {
         getTasksFromDB()
-            .then((response) => setState({ tasks: response, toRender: response.map((val) => generateTaskCard(val)) }))
+            .then((response) => setState({ tasks: response }))
             .catch((error) => props.onError(error.message));
     }
 
     function deleteHandler(task: Task) {
         return () => {
-            // render the delete
-            const filtered = state.tasks.filter((t) => t.id != task.id);
-            setState({
-                tasks: filtered,
-                toRender: filtered.map((val) => generateTaskCard(val)),
-            });
             // perform the delete via api
-            deleteTaskInDB(task).catch((error) => {
-                props.onError(error.message);
-
-                refresh(); // to refresh the list
-            });
+            deleteTaskInDB(task)
+                .then((response) => refresh())
+                .catch((error) => {
+                    props.onError(error.message);
+                    refresh();
+                    // to refresh the list
+                });
         };
     }
 
@@ -66,12 +61,13 @@ const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
         if (!isValidTask(to_add)) {
             props.onError('Task not valid');
         }
-        createTaskInDB(to_add).catch((error) => props.onError(error.message));
+        createTaskInDB(to_add)
+            .then((response) => refresh())
+            .catch((error) => props.onError(error.message));
         const temp = state.tasks.slice();
         temp.unshift(to_add);
-        setState({ tasks: temp, toRender: temp.map((val) => generateTaskCard(val)) });
+        // setState({ tasks: temp, toRender: temp.map((val) => generateTaskCard(val)) });
         // to ensure that the database has been updated
-        setTimeout(() => refresh(), 300);
     }
     function generateList(node: React.ReactNode): React.ReactNode {
         return <List>{node}</List>;
@@ -88,7 +84,7 @@ const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
     return (
         <React.Fragment>
             <TaskForm taskConsumer={createHandler}></TaskForm>
-            {generateList(state.toRender)}
+            {generateList(state.tasks.map(generateTaskCard))}
         </React.Fragment>
     );
 };
