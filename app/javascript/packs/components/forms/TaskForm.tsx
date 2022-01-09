@@ -5,12 +5,13 @@ import {
     DialogContent,
     DialogContentText,
     DialogTitle,
+    TextareaAutosize,
     TextField,
 } from '@material-ui/core';
 import { ThreeSixty } from '@material-ui/icons';
 import * as React from 'react';
 import Tag from '../data/Tag';
-import Task from '../data/Task';
+import Task, { EMPTY_TASK } from '../data/Task';
 import TagList from '../tags/TagList';
 import TagForm from './TagForm';
 
@@ -28,8 +29,8 @@ type TaskFormState = {
 };
 
 const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
-    const [state, setState] = React.useState({ isOpen: false, task: { name: '', tags: [] }, tag_name: '', count: 0 });
-    const close = () => setState({ task: { name: '', tags: [] }, isOpen: false, tag_name: '', count: state.count });
+    const [state, setState] = React.useState({ isOpen: false, task: EMPTY_TASK, tag_name: '', count: 0 });
+    const close = () => setState({ task: EMPTY_TASK, isOpen: false, tag_name: '', count: state.count });
     const open = () => setState({ ...state, isOpen: true });
 
     function addTask(event) {
@@ -66,6 +67,17 @@ const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
                             }
                         />
                         <br />
+                        <TextField
+                            required={false}
+                            margin="dense"
+                            multiline
+                            fullWidth
+                            id="description"
+                            value={state.task.description}
+                            onChange={(event) =>
+                                setState({ ...state, task: { ...state.task, description: event.target.value } })
+                            }
+                        />
                     </form>
                     <TagForm
                         onSubmit={(tag) => {
