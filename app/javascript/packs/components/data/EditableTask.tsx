@@ -91,4 +91,8 @@ export default class EditableTask {
     getTags(): Tag[] {
         return this.display_tags;
     }
+
+    clone(): EditableTask {
+        return new EditableTask(this.build());
+    }
 }

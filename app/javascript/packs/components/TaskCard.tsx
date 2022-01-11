@@ -1,7 +1,17 @@
-import { Button, Card, CardActions, CardContent, createStyles, makeStyles, Theme, Typography } from '@material-ui/core';
+import {
+    Button,
+    Card,
+    CardActions,
+    CardContent,
+    createStyles,
+    Link,
+    makeStyles,
+    Theme,
+    Typography,
+} from '@material-ui/core';
 import { green, red } from '@material-ui/core/colors';
 import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 import { editTaskInDB } from './api/TaskAPIRequests';
 import EditableTask from './data/EditableTask';
 import Tag from './data/Tag';
@@ -108,8 +118,10 @@ const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
                 <Button className={classes.delete} size="small" onClick={props.onDelete}>
                     Delete
                 </Button>
-                <Button size="small" onClick={() => navigate(`/tasks/${task.id}`)}>
-                    More details
+                <Button size="small">
+                    <Link component={RouterLink} to={`/tasks/${task.id}`}>
+                        More details
+                    </Link>
                 </Button>
             </CardActions>
         </Card>
