@@ -121,6 +121,7 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
                             label="Search"
                             {...params}
                             required
+                            onFocus={refresh}
                             InputLabelProps={{ className: classes.inputRoot }}
                         />
                     )}
