@@ -11,17 +11,6 @@ Matriculation Number: A0217970Y
 * Ruby version: 3.0.3
 * Rails: 6.1.4.4
 
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
 ## PostGresql dependencies
 
 Uses postgresql.
