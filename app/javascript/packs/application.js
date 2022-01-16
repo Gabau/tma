@@ -4,10 +4,11 @@
 // that code so it'll be compiled.
 
 import Rails from "@rails/ujs"
-import Turbolinks from "turbolinks"
 import * as ActiveStorage from "@rails/activestorage"
 import "channels"
 
 Rails.start()
-Turbolinks.start()
+// https://stackoverflow.com/questions/62942573/back-button-displays-blank-page-in-react
+// Causes an issue where a blank page is rendered instead of expected on back navigation.
+// Turbolinks.start()
 ActiveStorage.start()
