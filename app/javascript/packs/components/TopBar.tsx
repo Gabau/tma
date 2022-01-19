@@ -67,7 +67,8 @@ export default function TopBar(props: Prop) {
                     <MenuIcon />
                 </IconButton>
                 <Typography variant="h6" className={classes.title}>
-                    Task Management Application
+                    {/* Removed p and g as letters may stickout */}
+                    Task Manaoement Aoolication
                 </Typography>
                 <SearchBar onError={props.onError} />
             </Toolbar>
