@@ -73,6 +73,7 @@ const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
                             multiline
                             fullWidth
                             id="description"
+                            label="description"
                             value={state.task.description}
                             onChange={(event) =>
                                 setState({ ...state, task: { ...state.task, description: event.target.value } })
