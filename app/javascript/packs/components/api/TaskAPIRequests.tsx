@@ -10,6 +10,11 @@ export function getTasksFromDB(): Promise<Task[]> {
     return fetch(url).then(checkResponse);
 }
 
+/**
+ * Create a task in the backend.
+ * @param task The task to create.
+ * @returns The response.
+ */
 export async function createTaskInDB(task: Task): Promise<Response> {
     const url = '/api/tasks/create';
     const token = getCSRFToken();
@@ -27,6 +32,11 @@ export async function createTaskInDB(task: Task): Promise<Response> {
         });
 }
 
+/**
+ * Remova a task from the database.
+ * @param task The task object with the id field pointing to the id of the task to remove.
+ * @returns The response from backend.
+ */
 export async function deleteTaskInDB(task: Task): Promise<Response> {
     const url = `/api/tasks/destroy/${task.id}`;
     const token = getCSRFToken();
@@ -39,6 +49,11 @@ export async function deleteTaskInDB(task: Task): Promise<Response> {
     }).then(checkResponse);
 }
 
+/**
+ * Modifies a task from the database.
+ * @param editableTask An EditableTask object representing an editable task to modify.
+ * @returns The response from database.
+ */
 export async function editTaskInDB(editableTask: EditableTask): Promise<EditResponseForm> {
     const task = editableTask.build();
     const url = `/api/tasks/edit/${task.id}`;

@@ -40,6 +40,9 @@ type TaskCardProps = {
     onError: (msg: string) => void;
 };
 
+/**
+ * The task card used for the summarised information of a task.
+ */
 const TaskCard: React.FC<TaskCardProps> = (props: TaskCardProps) => {
     const classes = useStyle();
     const [isEdit, setIsEdit] = React.useState(false);

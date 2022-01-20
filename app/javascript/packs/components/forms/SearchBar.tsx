@@ -1,8 +1,3 @@
-// todo: A search component which can toggle by the required fields to search by
-// For instance, have a drop down menu to select whether it is a query by tags,
-// by name or by description --> and redirect to the queried site
-// or maybe have an option for advanced search? Using parameters supplied by url
-
 import { makeStyles, TextField, Theme, Typography } from '@material-ui/core';
 import { ArrowDropDown, FilterRounded } from '@material-ui/icons';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
@@ -10,7 +5,7 @@ import * as React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getTasksFromDB } from '../api/TaskAPIRequests';
-import Task, { EMPTY_TASK } from '../data/Task';
+import Task, { EMPTY_ARRAY, EMPTY_TASK } from '../data/Task';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
@@ -46,19 +41,16 @@ type SearchBarProps = {
     onError: (msg: string) => void;
 };
 
-const EMPTY_ARRAY: Task[] = [];
-
+/**
+ * A searchbar wrapper around autocomplete from mui.
+ * @param props The props to pass to the search bar.
+ */
 const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
-    // todo: switch between data sets and onAction for changing search conditions and change colors
-
     const classes = useStyles();
     const dropDownClasses = useDropDownStyles();
     const [tasks, setTasks] = React.useState(EMPTY_ARRAY);
     const [value, setValue] = React.useState('');
     const [task, setTask] = React.useState(null);
-    // search has to deal with two cases
-    // query a single task
-    // query all tasks that contain a particular sequence
 
     const navigate = useNavigate();
     const navigateToTask = (task: Task) => {
@@ -70,11 +62,6 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
     };
     useEffect(refresh, []);
     const submitHandler = (event: React.FormEvent) => {
-        // Can only be done when the compoenents reload when params change
-        // event.preventDefault();
-
-        // search by name
-        // specific search only
         if (value === '') {
             return;
         }
@@ -108,7 +95,6 @@ const SearchBar: React.FC<SearchBarProps> = (props: SearchBarProps) => {
                         if (newValue) {
                             navigateToTask(newValue as Task);
                             setValue('');
-                            // ensures that
                             setTask(null);
                         }
                     }}

@@ -29,6 +29,9 @@ type Prop = {
     onError: (msg: string) => void;
 };
 
+/**
+ * The top bar of the application.
+ */
 export default function TopBar(props: Prop) {
     const classes = useStyles();
     return (
@@ -47,11 +50,6 @@ export default function TopBar(props: Prop) {
                     <Typography variant="h6" className={classes.title}>
                         Task Management Application
                     </Typography>
-                    {/* <Breadcrumbs maxItems={2} aria-label="breadcrumb" className={classes.breadcrumbs}>
-                        <Link component={RouterLink} to="/">
-                            Home
-                        </Link>
-                    </Breadcrumbs> */}
                     <SearchBar onError={props.onError} />
                 </Toolbar>
             </AppBar>

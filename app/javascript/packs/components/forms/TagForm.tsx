@@ -17,7 +17,6 @@ type TagFormProps = {
  * @param props The parameters of the tag form.
  *              Requires what to do when the form is submitted.
  *              Provides a tag on submission.
- * @returns The React component of the form.
  */
 const TagForm: React.FC<TagFormProps> = (props: TagFormProps) => {
     // The tag that is created by the form

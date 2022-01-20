@@ -1,8 +1,3 @@
-/**
- * Component representing a drop down menu to select a tag.
- *
- */
-
 import { TextField } from '@material-ui/core';
 import { Autocomplete, createFilterOptions } from '@material-ui/lab';
 import * as React from 'react';
@@ -14,6 +9,9 @@ type TagAutoCompleteSelectorProps = {
     value: string;
 };
 
+/**
+ * Component representing a drop down menu to select a tag.
+ */
 const TagAutoCompleteSelector: React.FC<TagAutoCompleteSelectorProps> = (props: TagAutoCompleteSelectorProps) => {
     return (
         <Autocomplete

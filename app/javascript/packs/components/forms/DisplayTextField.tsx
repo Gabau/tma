@@ -12,6 +12,12 @@ type DisplayTextFieldProps = {
     fullWidth?: boolean;
 };
 
+/**
+ * A text field react component which can be switched with a
+ * different component to display through the use of the displayText
+ * prop.
+ * @param props DisplayTextFieldProps which contain the above fields.
+ */
 const DisplayTextField: React.FC<DisplayTextFieldProps> = (props: DisplayTextFieldProps) => {
     const fullWidth = props.fullWidth === undefined ? false : props.fullWidth;
     const [result, setResult] = React.useState();

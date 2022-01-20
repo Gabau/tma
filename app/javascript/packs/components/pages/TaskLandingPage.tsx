@@ -51,6 +51,10 @@ type MarkdownBlockProps = {
     children: string;
 };
 
+/**
+ * Page containing the description of a task.
+ *
+ */
 const TaskLandingPage: React.FC<TaskLandingPageProps> = (props: TaskLandingPageProps) => {
     const classes = useStyle();
     const [isEdit, setIsEdit] = React.useState(false);
@@ -135,11 +139,9 @@ const MarkdownBlock = (props: MarkdownBlockProps) => {
     );
 };
 
-// todo: Render two different kinds of component
-// When edit is pressed, render the edit card box with the render in preview.
-// Before edit is pressed, just render the entire thing as a markdown in a card. --> Entire thing will
-// be encapsulated in a card.
-
+/**
+ * Card for modifying the description, while providing a markdown render of the description.
+ */
 const EditDescriptionCard: React.FC<EditDescriptionCardProps> = (props: EditDescriptionCardProps) => {
     if (!props.activate) {
         return <MarkdownBlock>{props.task.description}</MarkdownBlock>;
@@ -148,9 +150,6 @@ const EditDescriptionCard: React.FC<EditDescriptionCardProps> = (props: EditDesc
     const classes = useStyle();
     const [value, setValue] = React.useState(0);
     const [editableTask, setEditableTask] = React.useState(new EditableTask(props.task));
-    // React.useEffect(() => {
-    //     setEditableTask(new EditableTask(props.task));
-    // }, [props.task]);
 
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setValue(newValue);

@@ -7,6 +7,9 @@ type TagChipProps = {
     onDelete?: (tag: Tag) => void;
 };
 
+/**
+ * A wrapper around React Chip for displaying tags.
+ */
 export const TagChip: React.FC<TagChipProps> = (props: TagChipProps) => {
     let onDelete: (event: any) => void = undefined;
     if (props.onDelete) {

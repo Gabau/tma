@@ -47,6 +47,10 @@ type TagItemProps = {
     onError: (msg: string) => void;
 };
 
+/**
+ * The tag index component, displays a list of the tags available in the application.
+ * Allows deleting of tags.
+ */
 const TagIndex: React.FC<TagIndexProp> = (props: TagIndexProp) => {
     const [state, setState] = React.useState({ tags: [] });
     const classes = useStyles();

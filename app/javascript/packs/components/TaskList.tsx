@@ -2,7 +2,7 @@ import { List, ListItem, Theme } from '@material-ui/core';
 import { createStyles, makeStyles } from '@material-ui/styles';
 import * as React from 'react';
 import TaskForm from './forms/TaskForm';
-import Task from './data/Task';
+import Task, { EMPTY_ARRAY } from './data/Task';
 import { green, red } from '@material-ui/core/colors';
 import TaskCard from './TaskCard';
 import { createTaskInDB, deleteTaskInDB, getTasksFromDB } from './api/TaskAPIRequests';
@@ -26,14 +26,11 @@ type TaskProp = {
     onError: (msg: string) => void;
 };
 
-type TaskState = {
-    tasks: Task[];
-};
-
-const defaultList: Task[] = [];
-
+/**
+ * React component for displaying a list of tasks,
+ */
 const TaskList: React.FC<TaskProp> = (props: TaskProp) => {
-    const [state, setState] = useState({ tasks: [] });
+    const [state, setState] = useState({ tasks: EMPTY_ARRAY });
     React.useEffect(() => refresh(), []);
     function refresh() {
         getTasksFromDB()
