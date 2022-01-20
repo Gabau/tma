@@ -55,7 +55,23 @@ export default function TopBar(props: Prop) {
                     <SearchBar onError={props.onError} />
                 </Toolbar>
             </AppBar>
-            <Toolbar />
+            {/* Copy of above to allow the bottom content to render after */}
+            <Toolbar>
+                <IconButton
+                    onClick={props.menuFunc}
+                    edge="start"
+                    className={classes.menuButton}
+                    color="inherit"
+                    aria-label="menu"
+                >
+                    <MenuIcon />
+                </IconButton>
+                <Typography variant="h6" className={classes.title}>
+                    {/* Removed p and g as letters may stickout */}
+                    Task Manaoement Aoolication
+                </Typography>
+                <SearchBar onError={props.onError} />
+            </Toolbar>
         </div>
     );
 }
