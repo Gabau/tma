@@ -28,6 +28,10 @@ type TaskFormState = {
     count: number;
 };
 
+/**
+ * A react component representing a form for creating
+ * a task.
+ */
 const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
     const [state, setState] = React.useState({ isOpen: false, task: EMPTY_TASK, tag_name: '', count: 0 });
     const close = () => setState({ task: EMPTY_TASK, isOpen: false, tag_name: '', count: state.count });
@@ -73,6 +77,7 @@ const TaskForm: React.FC<TaskFormProp> = (props: TaskFormProp) => {
                             multiline
                             fullWidth
                             id="description"
+                            label="description"
                             value={state.task.description}
                             onChange={(event) =>
                                 setState({ ...state, task: { ...state.task, description: event.target.value } })

@@ -10,6 +10,9 @@ type RouterProps = {
     onError: (msg: string) => void;
 };
 
+/**
+ * Component for routing the individual pages.
+ */
 export default (props: RouterProps) => (
     <Routes>
         <Route index element={<HomePage onError={props.onError} />} />

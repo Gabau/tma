@@ -19,6 +19,10 @@ type Prop = {
     onNavigate: () => void;
 };
 
+/**
+ * Renders the side menu of the application.
+ *
+ */
 export default function Menu(props: Prop) {
     const classes = useStyles();
     const navigate = useNavigate();

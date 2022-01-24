@@ -15,6 +15,9 @@ type TagListProps = {
     onDelete?: (tag: Tag) => void;
 };
 
+/**
+ * Displays a list of tags.
+ */
 const TagList: React.FC<TagListProps> = (props: TagListProps) => {
     const classes = useStyles();
     let mapFunction = (tag: Tag) => (
